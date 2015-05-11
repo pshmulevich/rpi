@@ -19,15 +19,20 @@ public class TriggerGpioExample {
 		final GpioController gpio = GpioFactory.getInstance();
 
 		// provision input pins for button
+		// per pin wiring http://pi4j.com/example/control.html this is pin
+		// 13/GPIO2/2 - #27
 		final GpioPinDigitalInput myButton = gpio.provisionDigitalInputPin(RaspiPin.GPIO_02, PinPullResistance.PULL_DOWN);
 		// provision output pins
-		GpioPinDigitalOutput myLed = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_04);
+		// per pin wiring http://pi4j.com/example/control.html this is pin
+		// 16/GPIO4/4 - #23
+		GpioPinDigitalOutput myLed = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_04, "MyLED", PinState.LOW);
+		myLed.setShutdownOptions(true, PinState.LOW);
 
-		// add trigger to the button to set state high on myLed[0] when button
+		// add trigger to the button to set state high on myLed when button
 		// input on pin 02 goes high
 		myButton.addTrigger(new GpioSetStateTrigger(PinState.HIGH, myLed, PinState.HIGH));
 
-		// add trigger to the button to set state low on myLed[0] when button
+		// add trigger to the button to set state low on myLed when button
 		// input on pin 02 goes low
 		myButton.addTrigger(new GpioSetStateTrigger(PinState.LOW, myLed, PinState.LOW));
 
